@@ -31,6 +31,7 @@ import me.coley.clicker.Values;
 import me.coley.clicker.agent.Agent;
 import me.coley.clicker.agent.AttatchListener;
 import me.coley.clicker.jna.KeyHandler;
+import me.coley.clicker.jna.SleepStats;
 import me.coley.clicker.ui.controls.LabeledBindButton;
 import me.coley.clicker.ui.controls.LabeledCheckbox;
 import me.coley.clicker.ui.controls.LabeledSlider;
@@ -133,7 +134,7 @@ public class MainGUI {
 		frmClicker = new JFrame();
 		frmClicker.setResizable(false);
 		frmClicker.setTitle("CClicker");
-		frmClicker.setBounds(100, 100, 422, 398);
+		frmClicker.setBounds(100, 100, 800, 600);
 		frmClicker.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frmClicker.addWindowListener(new WindowAdapter() {
 			@Override
@@ -268,16 +269,20 @@ public class MainGUI {
 		log.log(Level.INFO, "Displaying gui");
 		frmClicker.setVisible(true);
 	}
+	
+	public void initDelays() {
+		settings.addNumericValue(Values.SET_MIN_DELAY, Lang.get(Lang.SETTINGS_DELAY_MIN), new NumericValue(50, 5, 500));
+		settings.addNumericValue(Values.SET_AVG_DELAY, Lang.get(Lang.SETTINGS_DELAY_AVG), new NumericValue(180, 5, 5000));
+		settings.addNumericValue(Values.SET_MAX_DELAY, Lang.get(Lang.SETTINGS_DELAY_MAX), new NumericValue(2500, 5, 5000));
+		settings.addNumericValue(Values.SET_DEV_DELAY, Lang.get(Lang.SETTINGS_DELAY_DEV), new NumericValue(60, 0, 500));
+	}
 
 	/**
 	 * Creates the default values for settings.
 	 */
 	protected void initSettings() {
 		log.log(Level.INFO, "Setting up default settings...");
-		settings.addNumericValue(Values.SET_MIN_DELAY, Lang.get(Lang.SETTINGS_DELAY_MIN), new NumericValue(100, 5, 5000));
-		settings.addNumericValue(Values.SET_AVG_DELAY, Lang.get(Lang.SETTINGS_DELAY_AVG), new NumericValue(150, 5, 5000));
-		settings.addNumericValue(Values.SET_MAX_DELAY, Lang.get(Lang.SETTINGS_DELAY_MAX), new NumericValue(300, 5, 5000));
-		settings.addNumericValue(Values.SET_DEV_DELAY, Lang.get(Lang.SETTINGS_DELAY_DEV), new NumericValue(50, 0, 1000));
+		initDelays();
 		settings.addBooleanValue(Values.SET_WINDOW_TARGET, Lang.get(Lang.SETTINGS_WINDOW_TARGET), new BooleanValue(false));
 		keybinds.addKeyValue(Keybinds.BIND_TOGGLE_RECORDING, Lang.get(Lang.CONTROLS_TOGGLE_STATS), -1);
 		keybinds.addKeyValue(Keybinds.BIND_TOGGLE_CLICKER, Lang.get(Lang.CONTROLS_TOGGLE_CLICK), -1);
@@ -309,11 +314,13 @@ public class MainGUI {
 		settings.updateNumeric(Values.SET_AVG_DELAY, (int) av);
 		settings.updateNumeric(Values.SET_DEV_DELAY, (int) dv);
 		Random r = new Random();
-		double x1 = NumberUtil.clamp(Math.round(r.nextGaussian() * dv + av), mn, mx);
-		double x2 = NumberUtil.clamp(Math.round(r.nextGaussian() * dv + av), mn, mx);
-		double x3 = NumberUtil.clamp(Math.round(r.nextGaussian() * dv + av), mn, mx);
-		double x4 = NumberUtil.clamp(Math.round(r.nextGaussian() * dv + av), mn, mx);
-		double x5 = NumberUtil.clamp(Math.round(r.nextGaussian() * dv + av), mn, mx);
+		int examples = 10;
+		String exampleString = "";
+		for (int i = 0; i < examples; i++) {
+			SleepStats output = clicker.getGaussianSleep();
+			exampleString += (i+1)+". "+output.milliseconds+"ms "+output.nanoseconds+"ns\n";
+		}
+		
 		int fmt = 25;
 		//@formatter:off
 		String s = 
@@ -322,12 +329,7 @@ public class MainGUI {
 		"Maximum Delay: " + NumberUtil.fmtNum(f.getMax()/1000,fmt) + "s\n" +
 		"Average Delay: " + NumberUtil.fmtNum(f.getMean()/1000,fmt) + "s\n" +
 		"Std.Deviation: " + NumberUtil.fmtNum(f.getStandardDeviation(),fmt) + "s\n"
-		+"\nExample output:\n" +
-		"1. " + NumberUtil.fmtNum(x1/1000,fmt) + "s\n"+
-		"2. " + NumberUtil.fmtNum(x2/1000,fmt) + "s\n"+
-		"3. " + NumberUtil.fmtNum(x3/1000,fmt) + "s\n"+
-		"4. " + NumberUtil.fmtNum(x4/1000,fmt) + "s\n"+
-		"5. " + NumberUtil.fmtNum(x5/1000,fmt) + "s\n" ;
+		+"\nExample output:\n" +exampleString;
 		//@formatter:on
 		txtStats.setText(s);
 	}

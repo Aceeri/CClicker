@@ -10,4 +10,8 @@ public class SleepStats {
 		this.milliseconds = milliseconds;
 		this.nanoseconds = nanoseconds;
 	}
+	
+	public boolean valid() {
+		return this.milliseconds != -1 && this.nanoseconds != -1;
+	}
 }

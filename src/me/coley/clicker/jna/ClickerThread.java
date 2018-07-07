@@ -27,16 +27,16 @@ public class ClickerThread extends Thread {
 	@Override
 	public void run() {
 		while (gui.clicker.getStatus()) {
-			//if (canClick()) {
-				Mouse.mouseLeftClick(-1, -1);
-			//}
 			try {
 				SleepStats stats = gui.clicker.getGaussianSleep();
-				
-				gui.log.log(Level.INFO, "sleep: "+stats.milliseconds+", nanosleep: "+stats.nanoseconds);
+				if (!stats.valid()) {
+					continue;
+				}
+				//gui.log.log(Level.INFO, "sleep: "+stats.milliseconds+", nanosleep: "+stats.nanoseconds);
 				Thread.sleep(stats.milliseconds, stats.nanoseconds);
-				currentTime += stats.milliseconds * 1000000;
-				currentTime += stats.nanoseconds;
+				gui.clicker.currentTime += stats.milliseconds * 1000000;
+				gui.clicker.currentTime += stats.nanoseconds;
+				Mouse.mouseLeftClick(-1, -1);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

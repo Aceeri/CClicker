@@ -1,6 +1,7 @@
 package me.coley.clicker.jna;
 
 import java.awt.event.KeyEvent;
+import java.util.logging.Level;
 
 import me.coley.clicker.Keybinds;
 import me.coley.clicker.ui.MainGUI;

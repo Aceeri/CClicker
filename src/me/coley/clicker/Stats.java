@@ -30,6 +30,7 @@ public class Stats implements Togglable {
 	public void onEnable() {
 		// Start new stats
 		MainGUI.log.log(Level.INFO, "Beginning recording of mouse input.");
+		
 		//frequency = new DescriptiveStatistics();
 		MainGUI.log.log(Level.INFO, "Creating keybind-listener...");
 		statRecorder = new StatRecorder(gui.mouseHooks, this, gui.graph);
@@ -43,15 +44,17 @@ public class Stats implements Togglable {
 		if (statRecorder != null) {
 			gui.mouseHooks.unhook(statRecorder);
 		}
+		
 		gui.onRecordingFinished();
 	}
 	
 	public void generateData(int amount) {
-		if (statRecorder != null) {
-			for (int i = 0; i < amount; i++) {
-				SleepStats stats = gui.clicker.getGaussianSleep();
-				gui.graph.addValue((int) stats.milliseconds);
+		for (int i = 0; i < amount; i++) {
+			SleepStats stats = gui.clicker.getGaussianSleep();
+			if (!stats.valid()) {
+				continue;
 			}
+			gui.graph.addValue((int) stats.milliseconds);
 		}
 	}
 
