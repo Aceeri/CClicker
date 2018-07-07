@@ -74,7 +74,7 @@
 			<artifactId>tools</artifactId>
 			<scope>system</scope>
 			<version>hello-darkness-my-old-friend</version>
-			<systemPath>${toolspath}/tools.jar</systemPath>
+			<systemPath>C:\Program Files\Java\jdk1.8.0_65\lib\tools.jar</systemPath>
 		</dependency>
 	</dependencies>
 	<build>

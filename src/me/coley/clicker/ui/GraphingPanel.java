@@ -13,8 +13,8 @@ import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 public class GraphingPanel extends JPanel {
-	private final static int MAX_STAT = 1000;
-	private static int SIZE_CUT = 10;
+	private final static int MAX_STAT = 10000;
+	private static int SIZE_CUT = 3;
 	private static int CAPACITY = MAX_STAT / SIZE_CUT;
 	private ArrayList<Integer> graphData = new ArrayList<Integer>(CAPACITY);
 	private ArrayList<Integer> pureData = new ArrayList<Integer>();

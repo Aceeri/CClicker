@@ -1,16 +1,24 @@
 package me.coley.clicker.jna;
 
+import java.math.BigDecimal;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import me.coley.clicker.Values;
 import me.coley.clicker.ui.MainGUI;
 import me.coley.clicker.util.NumberUtil;
 import me.coley.simplejna.Mouse;
 import me.coley.simplejna.Windows;
+import me.coley.clicker.jna.SleepStats;
 
 public class ClickerThread extends Thread {
+	public static final Logger log = Logger.getLogger("Clicker-Init");
 	private final Random r = new Random();
 	private final MainGUI gui;
+	private long currentTime = 0;
 
 	public ClickerThread(MainGUI clicker) {
 		this.gui = clicker;
@@ -19,19 +27,16 @@ public class ClickerThread extends Thread {
 	@Override
 	public void run() {
 		while (gui.clicker.getStatus()) {
-			if (canClick()) {
+			//if (canClick()) {
 				Mouse.mouseLeftClick(-1, -1);
-			}
+			//}
 			try {
-				double dev = gui.settings.getNumericSetting(Values.SET_DEV_DELAY).getCurrent();
-				double mean = gui.settings.getNumericSetting(Values.SET_AVG_DELAY).getCurrent();
-				int min = gui.settings.getNumericSetting(Values.SET_MIN_DELAY).getCurrent();
-				int max = gui.settings.getNumericSetting(Values.SET_MAX_DELAY).getCurrent();
-				// Gaussian random sleep. Tends to sleep with times
-				// around the mean. Times near the bounds (min/max) are
-				// less common.
-				long sleep = (long) NumberUtil.clamp(Math.round(r.nextGaussian() * dev + mean), min, max);
-				Thread.sleep(sleep);
+				SleepStats stats = gui.clicker.getGaussianSleep();
+				
+				gui.log.log(Level.INFO, "sleep: "+stats.milliseconds+", nanosleep: "+stats.nanoseconds);
+				Thread.sleep(stats.milliseconds, stats.nanoseconds);
+				currentTime += stats.milliseconds * 1000000;
+				currentTime += stats.nanoseconds;
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

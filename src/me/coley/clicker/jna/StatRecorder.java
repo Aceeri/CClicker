@@ -23,10 +23,10 @@ public class StatRecorder extends MouseEventReceiver {
 	@Override
 	public boolean onMousePress(MouseButtonType type, HWND hwnd, POINT point) {
 		if (type == MouseButtonType.LEFT_DOWN) {
-			long now = System.currentTimeMillis();
+			long now = System.nanoTime();
 			if (last != -1) {
-				stats.getFrequencyData().addValue(now - last);
-				graph.addValue((int) (now - last));
+				stats.getFrequencyData().addValue((now - last) / 1000000);
+				graph.addValue((int) ((now - last) / 1000000));
 			}
 			last = now;
 		}

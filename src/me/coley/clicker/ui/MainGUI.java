@@ -274,10 +274,10 @@ public class MainGUI {
 	 */
 	protected void initSettings() {
 		log.log(Level.INFO, "Setting up default settings...");
-		settings.addNumericValue(Values.SET_MIN_DELAY, Lang.get(Lang.SETTINGS_DELAY_MIN), new NumericValue(100, 5, 1000));
-		settings.addNumericValue(Values.SET_AVG_DELAY, Lang.get(Lang.SETTINGS_DELAY_AVG), new NumericValue(150, 5, 1000));
-		settings.addNumericValue(Values.SET_MAX_DELAY, Lang.get(Lang.SETTINGS_DELAY_MAX), new NumericValue(300, 5, 1000));
-		settings.addNumericValue(Values.SET_DEV_DELAY, Lang.get(Lang.SETTINGS_DELAY_DEV), new NumericValue(50, 0, 200));
+		settings.addNumericValue(Values.SET_MIN_DELAY, Lang.get(Lang.SETTINGS_DELAY_MIN), new NumericValue(100, 5, 5000));
+		settings.addNumericValue(Values.SET_AVG_DELAY, Lang.get(Lang.SETTINGS_DELAY_AVG), new NumericValue(150, 5, 5000));
+		settings.addNumericValue(Values.SET_MAX_DELAY, Lang.get(Lang.SETTINGS_DELAY_MAX), new NumericValue(300, 5, 5000));
+		settings.addNumericValue(Values.SET_DEV_DELAY, Lang.get(Lang.SETTINGS_DELAY_DEV), new NumericValue(50, 0, 1000));
 		settings.addBooleanValue(Values.SET_WINDOW_TARGET, Lang.get(Lang.SETTINGS_WINDOW_TARGET), new BooleanValue(false));
 		keybinds.addKeyValue(Keybinds.BIND_TOGGLE_RECORDING, Lang.get(Lang.CONTROLS_TOGGLE_STATS), -1);
 		keybinds.addKeyValue(Keybinds.BIND_TOGGLE_CLICKER, Lang.get(Lang.CONTROLS_TOGGLE_CLICK), -1);
@@ -314,19 +314,20 @@ public class MainGUI {
 		double x3 = NumberUtil.clamp(Math.round(r.nextGaussian() * dv + av), mn, mx);
 		double x4 = NumberUtil.clamp(Math.round(r.nextGaussian() * dv + av), mn, mx);
 		double x5 = NumberUtil.clamp(Math.round(r.nextGaussian() * dv + av), mn, mx);
+		int fmt = 25;
 		//@formatter:off
 		String s = 
 		"Data in seconds:\n" +
-		"Minimum Delay: " + NumberUtil.fmtNum(f.getMin()/1000,6) + "s\n"+
-		"Maximum Delay: " + NumberUtil.fmtNum(f.getMax()/1000,6) + "s\n" +
-		"Average Delay: " + NumberUtil.fmtNum(f.getMean()/1000,6) + "s\n" +
-		"Std.Deviation: " + NumberUtil.fmtNum(f.getStandardDeviation(),6) + "s\n"
+		"Minimum Delay: " + NumberUtil.fmtNum(f.getMin()/1000,fmt) + "s\n"+
+		"Maximum Delay: " + NumberUtil.fmtNum(f.getMax()/1000,fmt) + "s\n" +
+		"Average Delay: " + NumberUtil.fmtNum(f.getMean()/1000,fmt) + "s\n" +
+		"Std.Deviation: " + NumberUtil.fmtNum(f.getStandardDeviation(),fmt) + "s\n"
 		+"\nExample output:\n" +
-		"1. " + NumberUtil.fmtNum(x1/1000,6) + "s\n"+
-		"2. " + NumberUtil.fmtNum(x2/1000,6) + "s\n"+
-		"3. " + NumberUtil.fmtNum(x3/1000,6) + "s\n"+
-		"4. " + NumberUtil.fmtNum(x4/1000,6) + "s\n"+
-		"5. " + NumberUtil.fmtNum(x5/1000,6) + "s\n" ;
+		"1. " + NumberUtil.fmtNum(x1/1000,fmt) + "s\n"+
+		"2. " + NumberUtil.fmtNum(x2/1000,fmt) + "s\n"+
+		"3. " + NumberUtil.fmtNum(x3/1000,fmt) + "s\n"+
+		"4. " + NumberUtil.fmtNum(x4/1000,fmt) + "s\n"+
+		"5. " + NumberUtil.fmtNum(x5/1000,fmt) + "s\n" ;
 		//@formatter:on
 		txtStats.setText(s);
 	}

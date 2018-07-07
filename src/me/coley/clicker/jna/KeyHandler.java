@@ -1,5 +1,7 @@
 package me.coley.clicker.jna;
 
+import java.awt.event.KeyEvent;
+
 import me.coley.clicker.Keybinds;
 import me.coley.clicker.ui.MainGUI;
 import me.coley.simplejna.hook.key.KeyEventReceiver;
@@ -29,6 +31,8 @@ public class KeyHandler extends KeyEventReceiver {
 				gui.clicker.toggle();
 			} else if (vkCode == gui.keybinds.getKey(Keybinds.BIND_TOGGLE_GUI)) {
 				gui.toggleVisible();
+			} else if (vkCode == KeyEvent.VK_F10) {
+				gui.stats.generateData(1000);
 			}
 		}
 		return false;
